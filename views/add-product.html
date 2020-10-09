@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product</title>
+    <style>
+      body {
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        margin: 0;
+        padding: 0;
+      }
+      .main-header {
+        width: 100%;
+        height: 3.8rem;
+        background-color: #9e74ec;
+        padding: 0 2rem;
+      }
+      .main-header-navigation{
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+      .main-header-ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;        
+      }
+      .main-header-li {
+        padding: 0 1rem;
+        margin: 0;
+      }
+      .main-header-li a {
+        text-decoration: none;
+        color: black;
+      }
+      .main-header-li a:hover,
+      .main-header-li a:active,
+      .main-header-li a.active {
+        color: #aecf5f;
+      }
+      main {
+        padding: 1rem;
+      }
+      .item-form{
+        width: 18rem;
+        max-width: 90%;
+        margin: auto;
+      }
+      .form-container {
+        margin: 0.8rem 0;
+      }
+      .form-container label,
+      .form-container input {
+        display: block;
+        width: 100%;
+      }
+      .form-container input {
+        font: inherit;
+        border: 1px solid #9e74ec;
+        border-radius: 3px;
+      }
+      button {
+        font: inherit;
+        color: #9e74ec;
+        border-radius: 3px;
+        background: white;
+        border: 1px solid #9e74ec;
+        cursor: pointer;
+      }
+      button:hover,
+      button:active{
+        background-color: #9e74ec;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <nav class="main-header-navigation">
+        <ul class="main-header-ul">
+          <li class="main-header-li"><a href="/">Home</a></li>
+          <li class="main-header-li"><a href="/admin/add-product" class="active">Add Product</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+        <form class="item-form" action="/admin/add-product" method="POST">
+        <div class="form-container">
+          <label for="title">Title</label>
+          <input type="text" name="title" id="title">
+        </div>
+        
+          
+        <button type="submit">Add Item</button>
+        </input>
+        </form>
+    </main>
+  </body>
+</html>

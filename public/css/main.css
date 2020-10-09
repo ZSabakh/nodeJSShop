@@ -1,0 +1,38 @@
+body {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  margin: 0;
+  padding: 0;
+}
+.main-header {
+  width: 100%;
+  height: 3.8rem;
+  background-color: #9e74ec;
+  padding: 0 2rem;
+}
+.main-header-navigation {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.main-header-ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+.main-header-li {
+  padding: 0 1rem;
+  margin: 0;
+}
+.main-header-li a {
+  text-decoration: none;
+  color: black;
+}
+.main-header-li a:hover,
+.main-header-li a:active,
+.main-header-li a.active {
+  color: #aecf5f;
+}
+main {
+  padding: 1rem;
+}

@@ -1,0 +1,31 @@
+.item-form {
+  width: 18rem;
+  max-width: 90%;
+  margin: auto;
+}
+.form-container {
+  margin: 0.8rem 0;
+}
+.form-container label,
+.form-container input {
+  display: block;
+  width: 100%;
+}
+.form-container input {
+  font: inherit;
+  border: 1px solid #9e74ec;
+  border-radius: 3px;
+}
+button {
+  font: inherit;
+  color: #9e74ec;
+  border-radius: 3px;
+  background: white;
+  border: 1px solid #9e74ec;
+  cursor: pointer;
+}
+button:hover,
+button:active {
+  background-color: #9e74ec;
+  color: white;
+}
