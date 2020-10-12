@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require('path')
-
+const notFound = require('./controllers/404')
 const app = express();
 
 app.set('view engine', 'ejs')
@@ -13,10 +13,8 @@ const shopRoutes = require("./routes/shop");
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use("/admin", adminRoutes.routes);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-app.use("/", (req, res, next) => {
-  res.status(404).render('404', {pageTitle: '404'});
-});
+app.use(notFound);
 
 app.listen(4000);

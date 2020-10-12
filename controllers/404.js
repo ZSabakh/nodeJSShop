@@ -1,0 +1,5 @@
+const notFound = (req, res, next) => {
+    res.status(404).render('404', {pageTitle: '404', path: 'nonExistent',});
+  }
+
+module.exports = notFound
