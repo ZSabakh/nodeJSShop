@@ -16,8 +16,8 @@ exports.postAddItem = (req, res, next) => {
   }
 
 exports.getItems = (req, res, next) => {
-  const items = Item.getAll()  
-  res.render('shop', {
+  const items = Item.getAll((items) => {
+    res.render('shop', {
       pageTitle: 'Shop',
       prods: items,
       path: '/',
@@ -25,4 +25,6 @@ exports.getItems = (req, res, next) => {
       CSSProduct:true,
       isProducts: items.length > 0,
     })
+  })  
+
   }
