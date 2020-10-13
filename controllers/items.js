@@ -1,4 +1,4 @@
-const items = []
+const Item = require('../models/item')
 
 exports.getAddItem = (req, res, next) => {
     res.render('add-product', {pageTitle: 'Add Prod',
@@ -10,12 +10,14 @@ exports.getAddItem = (req, res, next) => {
   }
 
 exports.postAddItem = (req, res, next) => {
-    items.push({title: req.body.title})
+    const item = new Item(req.body.title)
+    item.save()
     res.redirect("/");
   }
 
 exports.getItems = (req, res, next) => {
-    res.render('shop', {
+  const items = Item.getAll()  
+  res.render('shop', {
       pageTitle: 'Shop',
       prods: items,
       path: '/',
