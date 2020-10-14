@@ -1,7 +1,8 @@
 const Item = require('../models/item')
 
+
 exports.getAddItem = (req, res, next) => {
-    res.render('add-product', {pageTitle: 'Add Prod',
+    res.render('admin/add-product', {pageTitle: 'Add Prod',
     path: '/admin/add-product',
     CSSForms: true,
     CSSProduct: true,
@@ -15,16 +16,11 @@ exports.postAddItem = (req, res, next) => {
     res.redirect("/");
   }
 
-exports.getItems = (req, res, next) => {
-  const items = Item.getAll((items) => {
-    res.render('shop', {
-      pageTitle: 'Shop',
-      prods: items,
-      path: '/',
-      activeShop: true,
-      CSSProduct:true,
-      isProducts: items.length > 0,
-    })
-  })  
-
+  exports.getAdminProducts = (req, res, next) => {
+    const items = Item.getAll((items) => {
+        res.render('admin/list-product', {
+            pageTitle: 'Manage products',
+            path: '/admin/products',
+          })
+      })  
   }
