@@ -13,11 +13,15 @@ const getItemsFromFile = (callBack) => {
 }
 
 module.exports = class Item {
-    constructor(title) {
+    constructor(title, imageUrl,description,price) {
         this.title = title
+        this.imageUrl = imageUrl
+        this.description = description
+        this.price = price
     }
 
     save() {
+        this.id = Math.random().toString();
         getItemsFromFile(items => {
             items.push(this)
             fileSystem.writeFile(Path, JSON.stringify(items), (err) => {
@@ -30,5 +34,12 @@ module.exports = class Item {
 
     static getAll(callBack){
        getItemsFromFile(callBack)
+    }
+
+    static getById(id, callBack) {
+        getItemsFromFile(items => {
+            const item = items.find(item => item.id === id)
+            callBack(item)
+        })
     }
 }

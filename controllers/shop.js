@@ -17,17 +17,29 @@ exports.getCart = (req, res, next) => {
   })
 }
 
-
+exports.getOrders = (req, res, next) => {
+  res.render('shop/orders', {
+    pageTitle: 'Orders',
+    path: '/orders',
+  })
+}
 
 exports.getProducts = (req, res, next) => {
   const items = Item.getAll((items) => {
-    res.render('shop/item-list', {
+    res.render('shop/product-list', {
       pageTitle: 'Products',
       prods: items,
       path: '/products',
     })
   })  
   }
+
+exports.getDetails = (req, res, next) => {
+  const id = req.params.id;
+  console.log(Item.getById(id, item => {
+    console.log(item)
+  }))
+}
 
 exports.getIndex = (req, res, next) => {
   const items = Item.getAll((items) => {

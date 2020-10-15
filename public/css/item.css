@@ -2,16 +2,19 @@
   width: 18rem;
   max-width: 90%;
   margin: auto;
+  display: block;
 }
 .form-container {
   margin: 0.8rem 0;
 }
 .form-container label,
-.form-container input {
+.form-container input,
+.form-container textarea {
   display: block;
   width: 100%;
 }
-.form-container input {
+.form-container input,
+.form-container textarea {
   font: inherit;
   border: 1px solid #9e74ec;
   border-radius: 3px;
