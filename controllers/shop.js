@@ -37,7 +37,7 @@ exports.getProducts = (req, res, next) => {
 exports.getDetails = (req, res, next) => {
   const id = req.params.id;
   console.log(Item.getById(id, item => {
-    console.log(item)
+    res.render('shop/product-detail', {item: item, pageTitle: item.title, path: '/products'})
   }))
 }
 
