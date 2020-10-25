@@ -2,13 +2,25 @@ const Item = require('../models/item')
 
 
 exports.getAddItem = (req, res, next) => {
-    res.render('admin/add-product', {pageTitle: 'Add Prod',
+    res.render('admin/edit-product', {pageTitle: 'Add Prod',
     path: '/admin/add-product',
     CSSForms: true,
     CSSProduct: true,
     activeAddProducts: true,
     })
   }
+
+exports.getEditItem = (req, res, next) => {
+  const editing = req.query.edit
+  if(!editing){
+    res.redirect("/")
+  }
+  res.render('admin/edit-product', {
+  pageTitle: 'Edit Prod',
+  path: '/admin/edit-product',
+  editing: editing,
+  })
+}
 
 exports.postAddItem = (req, res, next) => {
     const title = req.body.title
