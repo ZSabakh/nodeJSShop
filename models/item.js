@@ -13,7 +13,8 @@ const getItemsFromFile = (callBack) => {
 }
 
 module.exports = class Item {
-    constructor(title, imageUrl,description,price) {
+    constructor(id, title, imageUrl,description,price) {
+        this.id = id
         this.title = title
         this.imageUrl = imageUrl
         this.description = description
@@ -21,12 +22,24 @@ module.exports = class Item {
     }
 
     save() {
-        this.id = Math.random().toString();
+
+
         getItemsFromFile(items => {
-            items.push(this)
-            fileSystem.writeFile(Path, JSON.stringify(items), (err) => {
-                console.log(err)
-            })
+            if(this.id){
+                const existingItemIndex = items.findIndex(item => item.id === this.id)
+                const updatedItems = [...items];
+                updatedItems[existingItemIndex] = this
+                fileSystem.writeFile(Path, JSON.stringify(updatedItems), (err) => {
+                    console.log(err)
+                })
+            } else {
+                this.id = Math.random().toString();
+                items.push(this)
+                fileSystem.writeFile(Path, JSON.stringify(items), (err) => {
+                    console.log(err)
+                })
+            }
+
         })
 
 

@@ -4,22 +4,40 @@ const Item = require('../models/item')
 exports.getAddItem = (req, res, next) => {
     res.render('admin/edit-product', {pageTitle: 'Add Prod',
     path: '/admin/add-product',
-    CSSForms: true,
-    CSSProduct: true,
-    activeAddProducts: true,
+    editing: false
     })
   }
 
 exports.getEditItem = (req, res, next) => {
   const editing = req.query.edit
   if(!editing){
-    res.redirect("/")
+    return res.redirect("/")
   }
-  res.render('admin/edit-product', {
-  pageTitle: 'Edit Prod',
-  path: '/admin/edit-product',
-  editing: editing,
+  const id = req.params.id
+  Item.getById(id, item => {
+    if(!item){
+      return res.redirect('/')
+    }
+    res.render('admin/edit-product', {
+      pageTitle: 'Edit Prod',
+      path: '/admin/edit-product',
+      editing: editing,
+      item: item
+      })
   })
+
+
+}
+
+exports.postEditItem = (req,res,next) => {
+  const id = req.body.id
+  const newTitle = req.body.title
+  const newDescription = req.body.description
+  const newPrice = req.body.price
+  const newImageUrl = req.body.imageUrl
+  const newItem = new Item(id, newTitle, newImageUrl, newDescription, newPrice)
+  newItem.save()
+  res.redirect('/admin/products')
 }
 
 exports.postAddItem = (req, res, next) => {
@@ -27,7 +45,7 @@ exports.postAddItem = (req, res, next) => {
     const description = req.body.description
     const imageUrl = req.body.imageUrl
     const price = req.body.price
-    const item = new Item(title, imageUrl,description,price)
+    const item = new Item(null, title, imageUrl,description,price)
     item.save()
     res.redirect("/");
   }
