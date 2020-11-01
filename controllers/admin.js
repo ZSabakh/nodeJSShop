@@ -59,3 +59,9 @@ exports.postAddItem = (req, res, next) => {
           })
       })  
   }
+
+  exports.postDeleteItem = (req,res, next) => {
+    const id = req.body.id
+    Item.deleteId(id)
+    res.redirect('/admin/products')
+  }

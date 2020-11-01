@@ -2,6 +2,7 @@ const fileSystem = require('fs')
 const path = require('path')
 const rootDirectory = require('../utility/directory')
 const Path = path.join(rootDirectory, 'data', 'items.json')
+const Cart = require('./cart')
 
 const getItemsFromFile = (callBack) => {
     fileSystem.readFile(Path, (err, content) => {
@@ -43,6 +44,18 @@ module.exports = class Item {
         })
 
 
+    }
+
+    static deleteId(id) {
+        getItemsFromFile(items => {
+            const item = items.find(item => item.id === id)
+            const newItems = items.filter(item => item.id !== id)
+            fileSystem.writeFile(Path, JSON.stringify(newItems), err => {
+                if (!err) {
+                    Cart.deleteItem(id, item.price);
+                }
+            })
+        })
     }
 
     static getAll(callBack){
