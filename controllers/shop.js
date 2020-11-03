@@ -12,10 +12,24 @@ exports.getCheckout = (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', {
-    pageTitle: 'Cart',
-    path: '/cart',
+  Cart.getCartItems(cart => {
+    Item.getAll(items => {
+      const cartItems = []
+      for (item of items) {
+        const cartItemInfo = cart.items.find(item1 => item1.id === item.id)
+        if (cartItemInfo){
+          cartItems.push({itemInfo: item, quantity: cartItemInfo.quantity})
+        }
+      }
+      res.render('shop/cart', {
+        pageTitle: 'Cart',
+        path: '/cart',
+        items: cartItems
+      })
+    })
+
   })
+
 }
 
 exports.postCart = (req, res, next) => {
