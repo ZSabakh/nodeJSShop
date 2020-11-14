@@ -25,6 +25,10 @@ module.exports = class Item {
   }
 
   save() {
+    return sql.execute(
+      "INSERT INTO items (title, price, description, imageUrl) VALUES (?, ?, ?, ?)",
+      [this.title, this.price, this.description, this.imageUrl]
+    );
     // getItemsFromFile((items) => {
     //   if (this.id) {
     //     const existingItemIndex = items.findIndex(
@@ -63,6 +67,8 @@ module.exports = class Item {
   }
 
   static getById(id) {
+    return sql.execute("SELECT * FROM items WHERE items.id = ?", [id]);
+
     // getItemsFromFile((items) => {
     //   const item = items.find((item) => item.id === id);
     //   callBack(item);

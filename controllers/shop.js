@@ -78,13 +78,20 @@ exports.getProducts = (req, res, next) => {
 exports.getDetails = (req, res, next) => {
   const id = req.params.id;
   console.log(
-    Item.getById(id, (item) => {
-      res.render("shop/product-detail", {
-        item: item,
-        pageTitle: item.title,
-        path: "/products",
-      });
-    })
+    Item.getById(id)
+      .then(([item]) => {
+        res.render("shop/product-detail", {
+          // Even though I used destructuring, item
+          // is still an array. first object of that array
+          // is the actual data
+          item: item[0],
+          pageTitle: item.title,
+          path: "/products",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   );
 };
 
