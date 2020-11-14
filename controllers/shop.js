@@ -1,5 +1,6 @@
 const Item = require("../models/item");
 const Cart = require("../models/cart");
+const sql = require("../utility/sql");
 
 exports.getCheckout = (req, res, next) => {
   res.render("shop/checkout", {
@@ -54,13 +55,24 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  const items = Item.getAll((items) => {
-    res.render("shop/product-list", {
-      pageTitle: "Products",
-      prods: items,
-      path: "/products",
+  Item.getAll()
+    .then(([items, data]) => {
+      res.render("shop/product-list", {
+        pageTitle: "Products",
+        prods: items,
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
+  // const items = Item.getAll((items) => {
+  //   res.render("shop/product-list", {
+  //     pageTitle: "Products",
+  //     prods: items,
+  //     path: "/products",
+  //   });
+  // });
 };
 
 exports.getDetails = (req, res, next) => {
@@ -77,11 +89,26 @@ exports.getDetails = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  const items = Item.getAll((items) => {
-    res.render("shop/index", {
-      pageTitle: "Main",
-      prods: items,
-      path: "/",
+  Item.getAll()
+    //Destructuring below, just getting results[0]
+    //and results[1] separately
+
+    .then(([items, data]) => {
+      res.render("shop/index", {
+        pageTitle: "Main",
+        prods: items,
+        path: "/",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
+
+// (items) => {
+//   res.render("shop/index", {
+//     pageTitle: "Main",
+//     prods: items,
+//     path: "/",
+//   });
+// }
