@@ -127,6 +127,14 @@ form {
   border-color: #ffeb3b;
 }
 
+.detail_image {
+  height: 18rem;
+}
+
+.detail_image img {
+  height: 100%;
+}
+
 .backdrop {
   position: fixed;
   top: 0;

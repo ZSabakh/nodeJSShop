@@ -55,10 +55,10 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Item.getAll()
-    .then(([items, data]) => {
+  Item.findAll()
+    .then((items) => {
       res.render("shop/product-list", {
-        pageTitle: "Products",
+        pageTitle: "All Items",
         prods: items,
         path: "/products",
       });
@@ -66,41 +66,27 @@ exports.getProducts = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-  // const items = Item.getAll((items) => {
-  //   res.render("shop/product-list", {
-  //     pageTitle: "Products",
-  //     prods: items,
-  //     path: "/products",
-  //   });
-  // });
 };
 
 exports.getDetails = (req, res, next) => {
   const id = req.params.id;
-  console.log(
-    Item.getById(id)
-      .then(([item]) => {
-        res.render("shop/product-detail", {
-          // Even though I used destructuring, item
-          // is still an array. first object of that array
-          // is the actual data
-          item: item[0],
-          pageTitle: item.title,
-          path: "/products",
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-  );
+  Item.findByPk(id)
+    .then(({ dataValues }) => {
+      console.log();
+      res.render("shop/product-detail", {
+        item: dataValues,
+        pageTitle: dataValues.title,
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getIndex = (req, res, next) => {
-  Item.getAll()
-    //Destructuring below, just getting results[0]
-    //and results[1] separately
-
-    .then(([items, data]) => {
+  Item.findAll()
+    .then((items) => {
       res.render("shop/index", {
         pageTitle: "Main",
         prods: items,

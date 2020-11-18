@@ -43,10 +43,14 @@ exports.postAddItem = (req, res, next) => {
   const description = req.body.description;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
-  const item = new Item(null, title, imageUrl, description, price);
-  item
-    .save()
-    .then(res.redirect("/"))
+
+  Item.create({
+    title: title,
+    description: description,
+    imageUrl: imageUrl,
+    price: price,
+  })
+    .then((res) => {})
     .catch((err) => {
       console.log(err);
     });
