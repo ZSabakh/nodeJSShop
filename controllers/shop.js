@@ -70,6 +70,10 @@ exports.getProducts = (req, res, next) => {
 
 exports.getDetails = (req, res, next) => {
   const id = req.params.id;
+  // Item.findAll({where: {id: id}}).then(
+  //   Gives array coz tis findsall
+  // ).catch(err => {console.log(err)})
+
   Item.findByPk(id)
     .then(({ dataValues }) => {
       console.log();

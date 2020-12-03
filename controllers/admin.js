@@ -14,17 +14,21 @@ exports.getEditItem = (req, res, next) => {
     return res.redirect("/");
   }
   const id = req.params.id;
-  Item.getById(id, (item) => {
-    if (!item) {
-      return res.redirect("/");
-    }
-    res.render("admin/edit-product", {
-      pageTitle: "Edit Prod",
-      path: "/admin/edit-product",
-      editing: editing,
-      item: item,
+  Item.findByPk(id)
+    .then((item) => {
+      if (!item) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Prod",
+        path: "/admin/edit-product",
+        editing: editing,
+        item: item,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.postEditItem = (req, res, next) => {
@@ -34,8 +38,21 @@ exports.postEditItem = (req, res, next) => {
   const newPrice = req.body.price;
   const newImageUrl = req.body.imageUrl;
   const newItem = new Item(id, newTitle, newImageUrl, newDescription, newPrice);
-  newItem.save();
-  res.redirect("/admin/products");
+
+  Item.findByPk(id)
+    .then((item) => {
+      item.title = newTitle;
+      item.description = newDescription;
+      item.price = newPrice;
+      item.imageUrl = newImageUrl;
+      return item.save();
+    })
+    .then((result) => {
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postAddItem = (req, res, next) => {
@@ -57,13 +74,25 @@ exports.postAddItem = (req, res, next) => {
 };
 
 exports.getAdminProducts = (req, res, next) => {
-  const items = Item.getAll((items) => {
-    res.render("admin/products", {
-      pageTitle: "Manage products",
-      path: "/admin/products",
-      prods: items,
+  Item.findAll()
+    .then((items) => {
+      res.render("admin/products", {
+        pageTitle: "Admin Items",
+        prods: items,
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
+
+  // const items = Item.getAll((items) => {
+  //   res.render("admin/products", {
+  //     pageTitle: "Manage products",
+  //     path: "/admin/products",
+  //     prods: items,
+  //   });
+  // });
 };
 
 exports.postDeleteItem = (req, res, next) => {
