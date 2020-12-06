@@ -14,8 +14,10 @@ exports.getEditItem = (req, res, next) => {
     return res.redirect("/");
   }
   const id = req.params.id;
-  Item.findByPk(id)
-    .then((item) => {
+  req.user
+    .getItems({ where: { id: id } })
+    .then((items) => {
+      item = items[0];
       if (!item) {
         return res.redirect("/");
       }
@@ -61,20 +63,25 @@ exports.postAddItem = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
 
-  Item.create({
-    title: title,
-    description: description,
-    imageUrl: imageUrl,
-    price: price,
-  })
-    .then((res) => {})
+  req.user
+    .createItem({
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      price: price,
+      // Alternative to createItem stuff Item.create user:req.user.id
+    })
+    .then((res) => {
+      res.redirect("/admin/products");
+    })
     .catch((err) => {
       console.log(err);
     });
 };
 
 exports.getAdminProducts = (req, res, next) => {
-  Item.findAll()
+  req.user
+    .getItems()
     .then((items) => {
       res.render("admin/products", {
         pageTitle: "Admin Items",
@@ -85,18 +92,19 @@ exports.getAdminProducts = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-
-  // const items = Item.getAll((items) => {
-  //   res.render("admin/products", {
-  //     pageTitle: "Manage products",
-  //     path: "/admin/products",
-  //     prods: items,
-  //   });
-  // });
 };
 
 exports.postDeleteItem = (req, res, next) => {
   const id = req.body.id;
-  Item.deleteId(id);
+  Item.findByPk(id)
+    .then((item) => {
+      return item.destroy();
+    })
+    .then((res) => {
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   res.redirect("/admin/products");
 };
