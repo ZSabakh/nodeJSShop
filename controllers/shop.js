@@ -36,10 +36,21 @@ exports.getCart = (req, res, next) => {
 
 exports.postRemoveItem = (req, res, next) => {
   const id = req.body.id;
-  Item.getById(id, (item) => {
-    Cart.deleteItem(id, item.price);
-    res.redirect("/cart");
-  });
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getItems({ where: { id: id } });
+    })
+    .then((items) => {
+      const item = items[0];
+      return item.cartProduct.destroy();
+    })
+    .then((result) => {
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.postCart = (req, res, next) => {
