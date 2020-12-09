@@ -1,16 +1,14 @@
 const Item = require("../models/item");
-const Cart = require("../models/cart");
-const sql = require("../utility/sql");
 
-exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", {
-    pageTitle: "Checkout",
-    path: "/checkout",
-    CSSForms: true,
-    CSSProduct: true,
-    activeAddProducts: true,
-  });
-};
+// exports.getCheckout = (req, res, next) => {
+//   res.render("shop/checkout", {
+//     pageTitle: "Checkout",
+//     path: "/checkout",
+//     CSSForms: true,
+//     CSSProduct: true,
+//     activeAddProducts: true,
+//   });
+// };
 
 exports.getCart = (req, res, next) => {
   req.user
@@ -53,6 +51,40 @@ exports.postRemoveItem = (req, res, next) => {
     });
 };
 
+exports.postOrder = (req, res, next) => {
+  let fetchedCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getItems();
+    })
+    .then((items) => {
+      return req.user
+        .createOrder()
+        .then((order) => {
+          return order.addItems(
+            items.map((item) => {
+              item.orderProduct = { quantity: item.cartProduct.quantity };
+              return item;
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .then((result) => {
+      return fetchedCart.setItems(null);
+    })
+    .then((res) => {
+      res.redirect("/orders");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 exports.postCart = (req, res, next) => {
   const id = req.body.id;
   let fetchedCart;
@@ -89,10 +121,18 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    pageTitle: "Orders",
-    path: "/orders",
-  });
+  req.user
+    .getOrders({ include: ["items"] })
+    .then((orders) => {
+      res.render("shop/orders", {
+        pageTitle: "Orders",
+        path: "/orders",
+        orders: orders,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
