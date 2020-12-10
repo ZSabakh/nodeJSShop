@@ -136,7 +136,7 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Item.findAll()
+  Item.getAll()
     .then((items) => {
       res.render("shop/product-list", {
         pageTitle: "All Items",
@@ -154,13 +154,13 @@ exports.getDetails = (req, res, next) => {
   // Item.findAll({where: {id: id}}).then(
   //   Gives array coz tis findsall
   // ).catch(err => {console.log(err)})
-
-  Item.findByPk(id)
-    .then(({ dataValues }) => {
-      console.log();
+  // ^^ Old sequelize code ^^
+  Item.getDetail(id)
+    .then((item) => {
+      console.log(item);
       res.render("shop/product-detail", {
-        item: dataValues,
-        pageTitle: dataValues.title,
+        item: item,
+        pageTitle: item.title,
         path: "/products",
       });
     })
@@ -170,7 +170,7 @@ exports.getDetails = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Item.findAll()
+  Item.getAll()
     .then((items) => {
       res.render("shop/index", {
         pageTitle: "Main",

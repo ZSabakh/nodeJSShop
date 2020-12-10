@@ -62,16 +62,11 @@ exports.postAddItem = (req, res, next) => {
   const description = req.body.description;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
+  const item = new Item(title, price, description, imageUrl);
 
-  req.user
-    .createItem({
-      title: title,
-      description: description,
-      imageUrl: imageUrl,
-      price: price,
-      // Alternative to createItem stuff Item.create user:req.user.id
-    })
-    .then((res) => {
+  item
+    .save()
+    .then((result) => {
       res.redirect("/admin/products");
     })
     .catch((err) => {
