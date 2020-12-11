@@ -1,4 +1,5 @@
 const Item = require("../models/item");
+const mongodb = require("mongodb");
 
 exports.getAddItem = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -8,54 +9,53 @@ exports.getAddItem = (req, res, next) => {
   });
 };
 
-// exports.getEditItem = (req, res, next) => {
-//   const editing = req.query.edit;
-//   if (!editing) {
-//     return res.redirect("/");
-//   }
-//   const id = req.params.id;
-//   req.user
-//     .getItems({ where: { id: id } })
-//     .then((items) => {
-//       item = items[0];
-//       if (!item) {
-//         return res.redirect("/");
-//       }
-//       res.render("admin/edit-product", {
-//         pageTitle: "Edit Prod",
-//         path: "/admin/edit-product",
-//         editing: editing,
-//         item: item,
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+exports.getEditItem = (req, res, next) => {
+  const editing = req.query.edit;
+  if (!editing) {
+    return res.redirect("/");
+  }
+  const id = req.params.id;
+  Item.getDetail(id)
+    .then((item) => {
+      if (!item) {
+        return res.redirect("/");
+      }
+      res.render("admin/edit-product", {
+        pageTitle: "Edit Prod",
+        path: "/admin/edit-product",
+        editing: editing,
+        item: item,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-// exports.postEditItem = (req, res, next) => {
-//   const id = req.body.id;
-//   const newTitle = req.body.title;
-//   const newDescription = req.body.description;
-//   const newPrice = req.body.price;
-//   const newImageUrl = req.body.imageUrl;
-//   const newItem = new Item(id, newTitle, newImageUrl, newDescription, newPrice);
+exports.postEditItem = (req, res, next) => {
+  const id = req.body.id;
+  const newTitle = req.body.title;
+  const newDescription = req.body.description;
+  const newPrice = req.body.price;
+  const newImageUrl = req.body.imageUrl;
 
-//   Item.findByPk(id)
-//     .then((item) => {
-//       item.title = newTitle;
-//       item.description = newDescription;
-//       item.price = newPrice;
-//       item.imageUrl = newImageUrl;
-//       return item.save();
-//     })
-//     .then((result) => {
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+  const item = new Item(
+    newTitle,
+    newPrice,
+    newDescription,
+    newImageUrl,
+    new mongodb.ObjectID(id)
+  );
+
+  item
+    .save()
+    .then((result) => {
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 exports.postAddItem = (req, res, next) => {
   const title = req.body.title;
@@ -74,20 +74,19 @@ exports.postAddItem = (req, res, next) => {
     });
 };
 
-// exports.getAdminProducts = (req, res, next) => {
-//   req.user
-//     .getItems()
-//     .then((items) => {
-//       res.render("admin/products", {
-//         pageTitle: "Admin Items",
-//         prods: items,
-//         path: "/admin/products",
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+exports.getAdminProducts = (req, res, next) => {
+  Item.getAll()
+    .then((items) => {
+      res.render("admin/products", {
+        pageTitle: "Admin Items",
+        prods: items,
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 // exports.postDeleteItem = (req, res, next) => {
 //   const id = req.body.id;

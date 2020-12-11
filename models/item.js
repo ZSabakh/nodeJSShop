@@ -2,18 +2,30 @@ const getDb = require("../utility/nosql").getDb;
 const mongodb = require("mongodb");
 
 class Item {
-  constructor(title, price, description, imageUrl) {
+  constructor(title, price, description, imageUrl, id) {
     (this.title = title),
       (this.price = price),
       (this.description = description),
       (this.imageUrl = imageUrl);
+    this._id = id;
   }
 
   save() {
     const db = getDb();
-    return db
-      .collection("items")
-      .insertOne(this)
+    let dbOperation;
+    if (this._id) {
+      dbOperation = db.collection("items").updateOne(
+        { _id: new mongodb.ObjectID(this._id) },
+        {
+          $set: this,
+          //Replace all fields, can be specified which too tho
+        }
+      );
+    } else {
+      dbOperation = db.collection("items").insertOne(this);
+    }
+
+    return dbOperation
       .then((res) => {
         console.log(res);
       })
