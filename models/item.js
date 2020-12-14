@@ -63,6 +63,19 @@ class Item {
         console.log(err);
       });
   }
+
+  static delete(id) {
+    const db = getDb();
+    return db
+      .collection("items")
+      .deleteOne({ _id: new mongodb.ObjectID(id) })
+      .then((response) => {
+        console.log("success");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 }
 
 module.exports = Item;

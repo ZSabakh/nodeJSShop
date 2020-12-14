@@ -88,17 +88,13 @@ exports.getAdminProducts = (req, res, next) => {
     });
 };
 
-// exports.postDeleteItem = (req, res, next) => {
-//   const id = req.body.id;
-//   Item.findByPk(id)
-//     .then((item) => {
-//       return item.destroy();
-//     })
-//     .then((res) => {
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-//   res.redirect("/admin/products");
-// };
+exports.postDeleteItem = (req, res, next) => {
+  const id = req.body.id;
+  Item.delete(id)
+    .then((response) => {
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
