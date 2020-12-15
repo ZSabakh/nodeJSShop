@@ -62,7 +62,14 @@ exports.postAddItem = (req, res, next) => {
   const description = req.body.description;
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
-  const item = new Item(title, price, description, imageUrl);
+  const item = new Item(
+    title,
+    price,
+    description,
+    imageUrl,
+    null,
+    req.user._id
+  );
 
   item
     .save()
