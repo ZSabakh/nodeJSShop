@@ -87,37 +87,45 @@ exports.postOrder = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const id = req.body.id;
-  let fetchedCart;
-  let newQuantity = 1;
-  req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart;
-      return cart.getItems({ where: { id: id } });
-    })
-    .then((items) => {
-      let item;
-      if (items.length > 0) {
-        item = items[0];
-      }
-      if (item) {
-        const quantityBefore = item.cartProduct.quantity;
-        newQuantity = quantityBefore + 1;
-        return item;
-      }
-      return Item.findByPk(id);
-    })
+
+  Item.getDetail(id)
     .then((item) => {
-      return fetchedCart.addItem(item, {
-        through: { quantity: newQuantity },
-      });
+      return req.user.toCart(item);
     })
-    .then(() => {
-      res.redirect("/cart");
-    })
-    .catch((err) => {
-      console.log(err);
+    .then((result) => {
+      console.log(result);
     });
+  // let fetchedCart;
+  // let newQuantity = 1;
+  // req.user
+  //   .getCart()
+  //   .then((cart) => {
+  //     fetchedCart = cart;
+  //     return cart.getItems({ where: { id: id } });
+  //   })
+  //   .then((items) => {
+  //     let item;
+  //     if (items.length > 0) {
+  //       item = items[0];
+  //     }
+  //     if (item) {
+  //       const quantityBefore = item.cartProduct.quantity;
+  //       newQuantity = quantityBefore + 1;
+  //       return item;
+  //     }
+  //     return Item.findByPk(id);
+  //   })
+  //   .then((item) => {
+  //     return fetchedCart.addItem(item, {
+  //       through: { quantity: newQuantity },
+  //     });
+  //   })
+  //   .then(() => {
+  //     res.redirect("/cart");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 exports.getOrders = (req, res, next) => {
