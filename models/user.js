@@ -14,12 +14,47 @@ class User {
     return db.collection("users").insertOne(this);
   }
 
+  getCart() {
+    const db = getDb();
+    const itemIds = this.cart.items.map((item) => {
+      return item.itemId;
+    });
+    return db
+      .collection("items")
+      .find({ _id: { $in: itemIds } })
+      .toArray()
+      .then((itemData) => {
+        return itemData.map((item) => {
+          return {
+            ...item,
+            quantity: this.cart.items.find((i) => {
+              return i.itemId.toString() === item._id.toString();
+            }).quantity,
+          };
+        });
+      });
+  }
+
   toCart(item) {
-    // const cartItem = this.cart.items.findIndex(prod => {
-    //   return prod._id === item._id;
-    // })
+    const cartItem = this.cart.items.findIndex((prod) => {
+      return prod.itemId == item._id;
+    });
+    let newQuantity = 1;
+    const newCartItems = [...this.cart.items];
+
+    if (cartItem >= 0) {
+      //then product exists
+      newQuantity = this.cart.items[cartItem].quantity + 1;
+      newCartItems[cartItem].quantity = newQuantity;
+    } else {
+      newCartItems.push({
+        itemId: new mongodb.ObjectID(item._id),
+        quantity: newQuantity,
+      });
+    }
+
     const newCart = {
-      items: [{ itemId: new mongodb.ObjectID(item._id), quantity: 1 }],
+      items: newCartItems,
     };
 
     const db = getDb();

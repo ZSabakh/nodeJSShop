@@ -13,20 +13,14 @@ const Item = require("../models/item");
 exports.getCart = (req, res, next) => {
   req.user
     .getCart()
-    .then((cart) => {
-      return cart
-        .getItems()
-        .then((items) => {
-          res.render("shop/cart", {
-            pageTitle: "Cart",
-            path: "/cart",
-            items: items,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    .then((items) => {
+      res.render("shop/cart", {
+        pageTitle: "Cart",
+        path: "/cart",
+        items: items,
+      });
     })
+
     .catch((err) => {
       console.log(err);
     });
