@@ -35,6 +35,36 @@ class User {
       });
   }
 
+  addOrder() {
+    const db = getDb();
+    return this.getCart()
+      .then((items) => {
+        const order = {
+          items: items,
+          user: {
+            _id: new mongodb.ObjectID(this._id),
+            name: this.username,
+            email: this.email,
+          },
+        };
+        db.collection("orders").insertOne(order);
+      })
+      .then((result) => {
+        this.cart = { items: [] };
+        return db
+          .collection("users")
+          .updateOne(
+            { _id: new mongodb.ObjectID(this._id) },
+            { $set: { cart: { items: [] } } }
+          );
+      });
+  }
+
+  getOrders() {
+    const db = getDb();
+    // return db.collection('orders').find
+  }
+
   deleteCartItem(id) {
     const newCartItems = this.cart.items.filter((item) => {
       return item.itemId.toString() !== id.toString();

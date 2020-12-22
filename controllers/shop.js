@@ -41,30 +41,8 @@ exports.postRemoveItem = (req, res, next) => {
 exports.postOrder = (req, res, next) => {
   let fetchedCart;
   req.user
-    .getCart()
-    .then((cart) => {
-      fetchedCart = cart;
-      return cart.getItems();
-    })
-    .then((items) => {
-      return req.user
-        .createOrder()
-        .then((order) => {
-          return order.addItems(
-            items.map((item) => {
-              item.orderProduct = { quantity: item.cartProduct.quantity };
-              return item;
-            })
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
+    .addOrder()
     .then((result) => {
-      return fetchedCart.setItems(null);
-    })
-    .then((res) => {
       res.redirect("/orders");
     })
     .catch((err) => {
